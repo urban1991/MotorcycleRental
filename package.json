@@ -8,7 +8,7 @@
     "start": "node index.js"
   },
   "engines": {
-    "node": "14.17.6"
+    "node": "19.7.0"
   },
   "author": "Piotr Urbaniak",
   "license": "ISC",
@@ -17,7 +17,7 @@
     "bcrypt": "^5.1.0",
     "compression": "^1.7.4",
     "config": "^3.3.9",
-    "diff": "^1.0.0",
+    "diff": "^5.1.0",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "helmet": "^7.0.0",
@@ -25,7 +25,7 @@
     "jsonwebtoken": "^9.0.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "mongoose": "^7.3.4",
+    "mongoose": "^7.4.0",
     "mongoose-transactions": "^1.1.4",
     "winston": "^3.10.0",
     "winston-mongodb": "^5.1.1"
