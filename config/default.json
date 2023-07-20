@@ -1,4 +1,4 @@
 {
     "jwtPrivateKey": "1234",
-    "db": "mongodb://localhost/motoRental"
+    "db": "mongodb+srv://new-user:new-user-123@cluster0.a3vkobl.mongodb.net/"
 }
