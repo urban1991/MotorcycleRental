@@ -6,7 +6,9 @@
   "scripts": {
     "test": "jest --watchAll --verbose --runInBand",
     "dev": "nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "lint:js": "eslint . --ext .js",
+    "lint:ts:fix": "eslint . --ext .js --fix"
   },
   "engines": {
     "node": "19.7.0"
