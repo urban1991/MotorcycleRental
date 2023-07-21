@@ -1,44 +1,45 @@
-const request = require('supertest');
-const { User } = require('../../models/user');
-const { Mark } = require('../../models/mark');
+const request = require("supertest");
+const {User} = require("../../models/user");
+const {Mark} = require("../../models/mark");
 
-describe('auth middleware', ()=> {
-    beforeEach(()=>{  server = require('../../index'); })
-    afterEach( async ()=> { 
-        await Mark.deleteMany({});
-        await server.close(); 
-    });
-    let token;
-    const exec = () => {
-        return request(server)
-            .post('/api/marks')
-            .set('x-auth-token', token)
-            .send({ mark: 'mark1'});
-    };
+describe("auth middleware", () => {
+  beforeEach(() => {
+    server = require("../../index");
+  });
+  afterEach(async () => {
+    await Mark.deleteMany({});
+    await server.close();
+  });
+  let token;
+  const exec = () =>
+    request(server)
+      .post("/api/marks")
+      .set("x-auth-token", token)
+      .send({mark: "mark1"});
 
-    beforeEach(() => {
-        token =  new User().generateAuthToken();
-    });
-    
-    it('should return 401 if no token was provided', async ()=> {
-        token = '';
+  beforeEach(() => {
+    token = new User().generateAuthToken();
+  });
 
-        const res = await exec();
+  it("should return 401 if no token was provided", async () => {
+    token = "";
 
-        expect(res.status).toBe(401);
-    });
+    const res = await exec();
 
-    it('should return 400 if token is invalid', async ()=> {
-        token = 'a';
+    expect(res.status).toBe(401);
+  });
 
-        const res = await exec();
+  it("should return 400 if token is invalid", async () => {
+    token = "a";
 
-        expect(res.status).toBe(400);
-    });
+    const res = await exec();
 
-    it('should return 200 if  token is valid', async ()=> {
-        const res = await exec();
+    expect(res.status).toBe(400);
+  });
 
-        expect(res.status).toBe(200);
-    });
-}); 
+  it("should return 200 if  token is valid", async () => {
+    const res = await exec();
+
+    expect(res.status).toBe(200);
+  });
+});
