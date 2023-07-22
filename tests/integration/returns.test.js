@@ -20,7 +20,7 @@ describe("/api/returns", () => {
       .send({customerId, motorcycleId});
 
   beforeEach(async () => {
-    server = require("../../index");
+    server = require("../../server");
 
     customerId = mongoose.Types.ObjectId();
     motorcycleId = mongoose.Types.ObjectId();

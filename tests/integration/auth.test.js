@@ -4,7 +4,7 @@ const {Mark} = require("../../models/mark");
 
 describe("auth middleware", () => {
   beforeEach(() => {
-    server = require("../../index");
+    server = require("../../server");
   });
   afterEach(async () => {
     await Mark.deleteMany({});

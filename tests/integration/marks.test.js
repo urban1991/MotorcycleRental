@@ -7,7 +7,7 @@ let server;
 
 describe("/api/marks", () => {
   beforeEach(() => {
-    server = require("../../index");
+    server = require("../../server");
   });
   afterEach(async () => {
     await server.close();
