@@ -1,21 +1,21 @@
 const request = require("supertest");
 const {User} = require("../../models/user");
-const {Mark} = require("../../models/mark");
+const {Brand} = require("../../models/brand");
 
 describe("auth middleware", () => {
   beforeEach(() => {
     server = require("../../server");
   });
   afterEach(async () => {
-    await Mark.deleteMany({});
+    await Brand.deleteMany({});
     await server.close();
   });
   let token;
   const exec = () =>
     request(server)
-      .post("/api/marks")
+      .post("/api/brands")
       .set("x-auth-token", token)
-      .send({mark: "mark1"});
+      .send({brand: "brand1"});
 
   beforeEach(() => {
     token = new User().generateAuthToken();

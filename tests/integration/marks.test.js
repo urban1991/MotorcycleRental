@@ -1,29 +1,29 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
-const {Mark} = require("../../models/mark");
+const {Brand} = require("../../models/brand");
 const {User} = require("../../models/user");
 
 let server;
 
-describe("/api/marks", () => {
+describe("/api/brands", () => {
   beforeEach(() => {
     server = require("../../server");
   });
   afterEach(async () => {
     await server.close();
-    await Mark.deleteMany({});
+    await Brand.deleteMany({});
   });
 
   describe("GET /", () => {
-    it("should return all marks", async () => {
-      const marks = [{mark: "mark1"}, {mark: "mark2"}];
-      await Mark.collection.insertMany(marks);
+    it("should return all brands", async () => {
+      const brands = [{brand: "brand1"}, {brand: "brand2"}];
+      await Brand.collection.insertMany(brands);
 
-      const res = await request(server).get("/api/marks");
+      const res = await request(server).get("/api/brands");
       expect(res.status).toBe(200);
       // expect(res.body.length).toBe(2);
-      expect(res.body.some((m) => m.mark === "mark1")).toBeTruthy();
-      expect(res.body.some((m) => m.mark === "mark2")).toBeTruthy();
+      expect(res.body.some((m) => m.brand === "brand1")).toBeTruthy();
+      expect(res.body.some((m) => m.brand === "brand2")).toBeTruthy();
     });
   });
 
