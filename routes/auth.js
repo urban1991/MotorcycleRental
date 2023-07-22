@@ -6,7 +6,6 @@ const express = require("express");
 const router = express.Router();
 const Joi = require("@hapi/joi");
 const jwt = require("jsonwebtoken");
-const config = require("config");
 
 router.post("/", async (req, res) => {
   const {error} = validate(req.body);

@@ -1,6 +1,5 @@
-const jwt = require("jsonwebtoken");
-const config = require("config");
 const mongoose = require("mongoose");
+// const jwt = require("jsonwebtoken");
 const Joi = require("@hapi/joi");
 
 const {Schema} = mongoose;
@@ -34,13 +33,13 @@ const userSchema = new Schema({
   isAdmin: Boolean,
 });
 
-userSchema.methods.generateAuthToken = function () {
-  const token = jwt.sign(
-    {_id: this._id, isAdmin: this.isAdmin},
-    config.get("jwtPrivateKey"),
-  );
-  return token;
-};
+// userSchema.methods.generateAuthToken = function () {
+//   const token = jwt.sign(
+//     {_id: this._id, isAdmin: this.isAdmin},
+//     // config.get("jwtPrivateKey"),
+//   );
+//   return token;
+// };
 
 const User = mongoose.model("User", userSchema);
 
