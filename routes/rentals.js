@@ -44,7 +44,7 @@ router.post("/", auth, async (req, res) => {
     },
     motorcycle: {
       _id: motorcycle._id,
-      mark: motorcycle.mark,
+      brand: motorcycle.brand,
       model: motorcycle.model,
       dailyRentalFee: motorcycle.dailyRentalFee,
     },

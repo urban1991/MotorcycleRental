@@ -1,13 +1,13 @@
-const {markSchema} = require("./mark");
+const {brandSchema} = require("./brand");
 const mongoose = require("mongoose");
 
 const {Schema} = mongoose;
 const Joi = require("@hapi/joi");
 
 const motorcycleSchema = new Schema({
-  mark: {
-    type: markSchema,
-    required: true,
+  brand: {
+    type: brandSchema,
+    required: false,
   },
   model: {
     type: String,
@@ -26,7 +26,7 @@ const motorcycleSchema = new Schema({
     max: 3000,
   },
   year: {
-    type: String,
+    type: Number,
     minlength: 4,
     maxlength: 4,
   },
@@ -48,11 +48,11 @@ const Motorcycle = mongoose.model("Motorcycle", motorcycleSchema);
 
 function validateMotorcycle(motorcycle) {
   const schema = Joi.object({
-    markId: Joi.objectId().required(),
+    brandId: Joi.objectId().required(),
     model: Joi.string().min(5).required(),
     bodyType: Joi.string(),
     motor: Joi.number(),
-    year: Joi.string(),
+    year: Joi.number(),
     dailyRentalFee: Joi.number(),
     numberInStock: Joi.number(),
   });
