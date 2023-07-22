@@ -1,12 +1,15 @@
 const mongoose = require("mongoose");
-const winston = require("winston");
-const config = require("config");
 
-module.exports = function () {
-  mongoose
-    .connect(config.get("db"), {
-      useUnifiedTopology: true,
-      useNewUrlParser: true,
-    })
-    .then(() => winston.info(`Connected to ${config.get("db")}..`));
+const db = process.env.DATABASE_URL;
+
+module.exports = function() {
+  mongoose.connect(db, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true
+  }).then(() => {
+    console.log("Connected to MongoDB...");
+  }).catch((err) => {
+    console.log("Could not connect to MongoDB...");
+    console.log(err);
+  });
 };
