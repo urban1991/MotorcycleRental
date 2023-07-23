@@ -84,7 +84,7 @@ async function updateMotorcycle(req, res) {
 }
 
 async function deleteMotorcycle(req, res) {
-  const motorcycle = await Motorcycle.findByIdAndRemove(req.params.id);
+  const motorcycle = await Motorcycle.findByIdAndDelete(req.params.id);
 
   if (!motorcycle) {
     return res.status(404).send("The motorcycle with given ID was not found");
