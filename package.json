@@ -17,7 +17,6 @@
   "author": "Piotr Urbaniak",
   "license": "ISC",
   "dependencies": {
-    "@hapi/joi": "^17.1.1",
     "bcrypt": "^5.1.0",
     "compression": "^1.7.4",
     "diff": "^5.1.0",
@@ -25,6 +24,7 @@
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
     "helmet": "^7.0.0",
+    "joi": "^17.9.2",
     "joi-objectid": "^4.0.2",
     "jsonwebtoken": "^9.0.1",
     "lodash": "^4.17.21",
