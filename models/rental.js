@@ -46,6 +46,45 @@ rentalSchema = new Schema({
     }),
     required: true,
   },
+  status: {
+    type: String,
+    required: true,
+    enum: ['reserved', 'rented', 'returned', 'late']
+  },
+  paymentMethod: {
+    type: new mongoose.Schema({
+      cardType: {
+        type: String,
+        required: true,
+        enum: ['Visa', 'MasterCard', 'AmericanExpress']
+      },
+      cardNumber: {
+        type: String,
+        required: true,
+        minlength: 16,
+        maxlength: 16,
+      },
+      expiryDate: {
+        type: Date,
+        required: true
+      },
+      CVV: {
+        type: String,
+        required: true,
+        minlength: 3,
+        maxlength: 4,
+      },
+    }),
+    required: true
+  },
+  lateFee: {
+    type: Number,
+    min: 0
+  },
+  customerFeedback: {
+    type: String,
+    maxlength: 500
+  },
   dateOut: {
     type: Date,
     required: true,
@@ -82,8 +121,17 @@ const Rental = mongoose.model("Rental", rentalSchema);
 
 function validateRental(rental) {
   const schema = Joi.object({
-    customerId: Joi.objectId().required(),
-    motorcycleId: Joi.objectId().required(),
+    customerId: Joi.string().alphanum().length(24).required(),
+    motorcycleId: Joi.string().alphanum().length(24).required(),
+    status: Joi.string().valid('reserved', 'rented', 'returned', 'late').required(),
+    paymentMethod: Joi.object({
+      cardType: Joi.string().valid('Visa', 'MasterCard', 'AmericanExpress').required(),
+      cardNumber: Joi.string().length(16).required(),
+      expiryDate: Joi.date().required(),
+      CVV: Joi.string().length(3).required(),
+    }).required(),
+    lateFee: Joi.number().min(0),
+    customerFeedback: Joi.string().max(500),
   });
 
   return schema.validate(rental);
