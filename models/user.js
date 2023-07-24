@@ -30,6 +30,30 @@ const userSchema = new Schema({
     maxlength: 1024,
     required: true,
   },
+  phoneNumber: {
+    type: String,
+    required: false,
+    minlength: 10,
+    maxlength: 15,
+  },
+  dateOfBirth: {
+    type: Date,
+    required: false
+  },
+  address: {
+    type: String,
+    required: false,
+    minlength: 5,
+    maxlength: 255,
+  },
+  avatarUrl: {
+    type: String,
+    required: false
+  },
+  isVerified: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
@@ -53,6 +77,11 @@ function validateUser(user) {
     lastName: Joi.string().min(2).max(50).required(),
     email: Joi.string().min(5).max(255).required().email(),
     password: Joi.string().min(5).max(1024).required(),
+    phoneNumber: Joi.string().min(10).max(15),
+    dateOfBirth: Joi.date(),
+    address: Joi.string().min(5).max(255),
+    avatarUrl: Joi.string().uri().allow(''),
+    isVerified: Joi.boolean(),
   });
 
   return schema.validate(user);
