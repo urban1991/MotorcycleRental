@@ -50,6 +50,11 @@ const userSchema = new Schema({
     type: String,
     required: false
   },
+  driverLicenseNumber: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   isVerified: {
     type: Boolean,
     default: false
@@ -80,6 +85,7 @@ function validateUser(user) {
     phoneNumber: Joi.string().min(10).max(15),
     dateOfBirth: Joi.date(),
     address: Joi.string().min(5).max(255),
+    driverLicenseNumber: Joi.string().required(),
     avatarUrl: Joi.string().uri().allow(''),
     isVerified: Joi.boolean(),
   });
