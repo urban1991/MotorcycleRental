@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 // const jwt = require("jsonwebtoken");
-const Joi = require("@hapi/joi");
+const Joi = require("joi");
 
 const {Schema} = mongoose;
 
@@ -29,6 +29,10 @@ const userSchema = new Schema({
     minlength: 5,
     maxlength: 1024,
     required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
   },
   isAdmin: Boolean,
 });

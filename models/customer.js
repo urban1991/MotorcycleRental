@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const {Schema} = mongoose;
-const Joi = require("@hapi/joi");
+const Joi = require("joi");
 
 const customerSchema = new Schema({
   name: {
@@ -14,7 +14,7 @@ const customerSchema = new Schema({
   isVip: {
     type: Boolean,
     default: false,
-  },
+  }
 });
 
 const Customer = mongoose.model("Customer", customerSchema);

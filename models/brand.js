@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const {Schema} = mongoose;
-const Joi = require("@hapi/joi");
+const Joi = require("joi");
 
 const brandSchema = new Schema({
   brand: {
@@ -10,6 +10,10 @@ const brandSchema = new Schema({
     minlength: 3,
     maxlength: 50,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  }
 });
 
 const Brand = mongoose.model("Brand", brandSchema);

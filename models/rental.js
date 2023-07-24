@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const {Schema} = mongoose;
-const Joi = require("@hapi/joi");
+const Joi = require("joi");
 const moment = require("moment");
 
 rentalSchema = new Schema({
@@ -58,6 +58,10 @@ rentalSchema = new Schema({
     type: Number,
     min: 100,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  }
 });
 
 rentalSchema.statics.lookup = function (customerId, motorcycleId) {
