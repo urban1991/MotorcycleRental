@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-// const Schema = mongoose.Schema;
 const express = require("express");
 const {Customer, validate} = require("../models/customer");
 

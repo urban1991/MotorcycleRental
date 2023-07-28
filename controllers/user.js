@@ -3,9 +3,7 @@ const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const Transaction = require("mongoose-transactions");
 
-
 const transaction = new Transaction();
-
 
 async function createUser(req, res) {
   const {error} = validate(req.body);
