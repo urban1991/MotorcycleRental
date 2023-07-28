@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const express = require("express");
 
 const router = express.Router();
-const Joi = require("@hapi/joi");
+const Joi = require("joi");
 const jwt = require("jsonwebtoken");
 
 router.post("/", async (req, res) => {
@@ -25,7 +25,7 @@ router.post("/", async (req, res) => {
 function validate(req) {
   const schema = Joi.object({
     email: Joi.string().min(5).max(255).required(),
-    password: Joi.string().min(5).max(1024).required(),
+    password: Joi.string().min(5).max(1024).required()
   });
 
   return schema.validate(req);

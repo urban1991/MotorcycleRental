@@ -1,7 +1,7 @@
 const express = require("express");
 
 const router = express.Router();
-const Joi = require("@hapi/joi");
+const Joi = require("joi");
 const {Rental} = require("../models/rental");
 const {Motorcycle} = require("../models/motorcycle");
 const auth = require("../middleware/auth");
