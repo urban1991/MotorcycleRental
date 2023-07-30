@@ -2,6 +2,15 @@ const {Motorcycle, validate} = require("../models/motorcycle");
 const {Brand} = require("../models/brand");
 
 
+async function topMotorcycles(req, res) {
+  const motorcycles = await Motorcycle.find()
+    .limit(5)
+    .sort("-dailyRentalFee")
+    .select("model dailyRentalFee year brand");
+
+  res.send(motorcycles);
+}
+
 async function getAllMotorcycles(req, res) {
   const motorcycles = await Motorcycle.find().sort("brand");
   res.send(motorcycles);
@@ -94,6 +103,7 @@ async function deleteMotorcycle(req, res) {
 }
 
 module.exports = {
+  topMotorcycles,
   getAllMotorcycles,
   getMotorcycle,
   createMotorcycle,

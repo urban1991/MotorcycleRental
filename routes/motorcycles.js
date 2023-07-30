@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+  topMotorcycles,
   getAllMotorcycles,
   createMotorcycle,
   getMotorcycle,
@@ -8,6 +9,8 @@ const {
 } = require("../controllers/motorcycle");
 
 const router = express.Router();
+
+router.route("/top").get(topMotorcycles);
 
 router.route("/")
   .get(getAllMotorcycles)
