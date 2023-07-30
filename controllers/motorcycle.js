@@ -1,5 +1,6 @@
 const {Motorcycle, validate} = require("../models/motorcycle");
 const {Brand} = require("../models/brand");
+const APIFeatures = require("../utils/apiFeatures");
 
 
 async function topMotorcycles(req, res) {
@@ -8,11 +9,17 @@ async function topMotorcycles(req, res) {
     .sort("-dailyRentalFee")
     .select("model dailyRentalFee year brand");
 
+  // not sure if this will work as expected, maybe need to call next()?
   res.send(motorcycles);
 }
 
 async function getAllMotorcycles(req, res) {
-  const motorcycles = await Motorcycle.find().sort("brand");
+  const apiFeatures = new APIFeatures(Motorcycle.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields();
+
+  const motorcycles = await apiFeatures.query;
   res.send(motorcycles);
 }
 
@@ -37,23 +44,20 @@ async function createMotorcycle(req, res) {
     return res.status(400).send("Invalid brand");
   }
 
-  const motorcycle = await Motorcycle.create({
-    brand: {
-      _id: motoBrand._id,
-      brand: motoBrand.brand
-    },
-    model: req.body.model,
-    bodyType: req.body.bodyType,
-    motor: req.body.motor,
-    year: req.body.year,
-    dailyRentalFee: req.body.dailyRentalFee,
-    numberInStock: req.body.numberInStock,
-  });
+  try {
+    const motorcycle = await Motorcycle.create(req.body);
+    res.send(motorcycle);
 
-  res.send(motorcycle);
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: error
+    });
+  }
 }
 
 async function updateMotorcycle(req, res) {
+  //add validation for update in motorcycle model
   const {error} = validate(req.body);
 
   if (error) {
@@ -66,23 +70,15 @@ async function updateMotorcycle(req, res) {
     return res.status(400).send("Invalid brand");
   }
 
+  const updatedFields = Object.entries(req.body).reduce((acc, [key, value]) => ({
+    ...acc,
+    ...(value && {[key]: value})
+  }));
+
   const motorcycle = await Motorcycle.findByIdAndUpdate(
     req.params.id,
-    {
-      $set: {
-        brand: {
-          _id: motoBrand._id,
-          brand: motoBrand.brand,
-        },
-        model: req.body.model,
-        bodyType: req.body.bodyType,
-        motor: req.body.motor,
-        year: req.body.year,
-        dailyRentalFee: req.body.dailyRentalFee,
-        numberInStock: req.body.numberInStock,
-      },
-    },
-    {returnOriginal: false},
+    {$set: updatedFields},
+    {new: true}
   );
 
   if (!motorcycle) {
