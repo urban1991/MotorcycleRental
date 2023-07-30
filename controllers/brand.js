@@ -22,12 +22,16 @@ async function createBrand(req, res) {
   if (error) {
     return res.status(400).send(error.details[0].message);
   }
+  try {
+    const brand = await Brand.create(req.body);
+    res.send(brand);
 
-  const brand = await Brand.create({
-    brand: req.body.brand
-  });
-
-  res.send(brand);
+  } catch (error) {
+    res.status(400).json({
+      status: "fail",
+      message: error
+    });
+  }
 }
 
 async function updateBrand(req, res) {
@@ -41,10 +45,10 @@ async function updateBrand(req, res) {
     req.params.id,
     {
       $set: {
-        brand: req.body.brand,
-      },
+        brand: req.body.brand
+      }
     },
-    {returnOriginal: false},
+    {returnOriginal: false}
   );
 
   if (!brand) {
