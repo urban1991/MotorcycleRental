@@ -1,8 +1,14 @@
 const {Brand, validate} = require("../models/brand");
+const APIFeatures = require("../utils/apiFeatures");
 
 async function getAllBrands(req, res) {
-  const brands = await Brand.find().sort("brand");
+  const apiFeatures = new APIFeatures(Brand.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
 
+  const brands = await apiFeatures.query;
   res.send(brands);
 }
 
@@ -22,6 +28,7 @@ async function createBrand(req, res) {
   if (error) {
     return res.status(400).send(error.details[0].message);
   }
+
   try {
     const brand = await Brand.create(req.body);
     res.send(brand);
@@ -41,14 +48,15 @@ async function updateBrand(req, res) {
     return res.status(400).send(error.details[0].message);
   }
 
+  const updatedFields = Object.entries(req.body).reduce((acc, [key, value]) => ({
+    ...acc,
+    ...(value && {[key]: value})
+  }));
+
   const brand = await Brand.findByIdAndUpdate(
     req.params.id,
-    {
-      $set: {
-        brand: req.body.brand
-      }
-    },
-    {returnOriginal: false}
+    {$set: {updatedFields}},
+    {new: true}
   );
 
   if (!brand) {
