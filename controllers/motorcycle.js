@@ -17,7 +17,8 @@ async function getAllMotorcycles(req, res) {
   const apiFeatures = new APIFeatures(Motorcycle.find(), req.query)
     .filter()
     .sort()
-    .limitFields();
+    .limitFields()
+    .paginate();
 
   const motorcycles = await apiFeatures.query;
   res.send(motorcycles);
@@ -25,6 +26,7 @@ async function getAllMotorcycles(req, res) {
 
 async function getMotorcycle(req, res) {
   const motorcycle = await Motorcycle.findById(req.params.id);
+
   if (!motorcycle) {
     return res.status(404).send("The motorcycle with given ID was not found");
   }
@@ -32,7 +34,7 @@ async function getMotorcycle(req, res) {
 }
 
 async function createMotorcycle(req, res) {
-  const {error} = validate(req.body);
+  const {error} = validate(req.body, "post");
 
   if (error) {
     return res.status(400).send(error.details[0].message);
@@ -57,8 +59,7 @@ async function createMotorcycle(req, res) {
 }
 
 async function updateMotorcycle(req, res) {
-  //add validation for update in motorcycle model
-  const {error} = validate(req.body);
+  const {error} = validate(req.body, "patch");
 
   if (error) {
     return res.status(400).send(error.details[0].message);
