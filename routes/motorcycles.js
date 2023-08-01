@@ -6,11 +6,14 @@ const {
   getMotorcycle,
   updateMotorcycle,
   deleteMotorcycle,
+  getMotorcyclesStats
 } = require("../controllers/motorcycle");
 
 const router = express.Router();
 
 router.route("/top").get(topMotorcycles);
+
+router.route("/stats").get(getMotorcyclesStats);
 
 router.route("/")
   .get(getAllMotorcycles)

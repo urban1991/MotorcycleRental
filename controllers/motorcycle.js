@@ -99,11 +99,38 @@ async function deleteMotorcycle(req, res) {
   res.send(motorcycle);
 }
 
+async function getMotorcyclesStats(req, res) {
+  const stats = await Motorcycle.aggregate([
+    {
+      $match: {year: {$gte: 1990}}
+    },
+    {
+      $group: {
+        _id: "$bodyType",
+        numMotorcycles: {$sum: 1},
+        avgPrice: {$avg: "$dailyRentalFee"},
+        minPrice: {$min: "$dailyRentalFee"},
+        maxPrice: {$max: "$dailyRentalFee"}
+      }
+    },
+    {
+      $sort: {avgPrice: 1}
+    }
+  ]);
+
+  if (!stats) {
+    return res.status(404).send("No stats found at the moment");
+  }
+
+  res.send(stats);
+}
+
 module.exports = {
   topMotorcycles,
   getAllMotorcycles,
   getMotorcycle,
   createMotorcycle,
   updateMotorcycle,
-  deleteMotorcycle
+  deleteMotorcycle,
+  getMotorcyclesStats
 };
