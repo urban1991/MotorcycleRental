@@ -1,7 +1,7 @@
 const express = require("express");
 const validateObjectId = require("../middleware/validateObjectId");
-const auth = require("../middleware/auth");
-const admin = require("../middleware/admin");
+// const auth = require("../middleware/auth");
+// const admin = require("../middleware/admin");
 const {
   createBrand,
   getAllBrands,
@@ -18,7 +18,11 @@ router.route("/")
 
 router.route("/:id")
   .get(validateObjectId, getBrand)
-  .patch([auth, validateObjectId], updateBrand)
-  .delete([auth, admin, validateObjectId], deleteBrand);
+  //TODO: add auth and admin middleware when you learn how to use them
+
+  // .patch([auth, validateObjectId], updateBrand)
+  // .delete([auth, admin, validateObjectId], deleteBrand);
+  .patch(updateBrand)
+  .delete(deleteBrand);
 
 module.exports = router;
