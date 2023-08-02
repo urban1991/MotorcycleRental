@@ -1,6 +1,7 @@
 const {Rental, validate} = require("../models/rental");
 const {Customer} = require("../models/customer");
 const {Motorcycle} = require("../models/motorcycle");
+//this package is old and i should use mongoose transactions which are available in v7 version
 const Transaction = require("mongoose-transactions");
 const APIFeatures = require("../utils/apiFeatures");
 
