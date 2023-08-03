@@ -1,9 +1,23 @@
-const {validate, User} = require("../models/user");
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
+//Mongoose transactions needs to be replaced with something else
 const Transaction = require("mongoose-transactions");
+const {validate, User} = require("../models/user");
+const APIFeatures = require("../utils/apiFeatures");
 
 const transaction = new Transaction();
+
+async function getAllUsers(req, res) {
+  const features = new APIFeatures(User.find(), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const users = await features.query;
+
+  res.send(users);
+}
 
 async function createUser(req, res) {
   const {error} = validate(req.body);
@@ -18,7 +32,7 @@ async function createUser(req, res) {
   }
 
   user = new User(
-    _.pick(req.body, ["firstName", "lastName", "email", "password"])
+    _.pick(req.body, ["firstName", "lastName", "email", "password"]),
   );
 
   try {
@@ -32,7 +46,6 @@ async function createUser(req, res) {
     res
       .header("x-auth-token", token)
       .send(_.pick(user, ["firstName", "lastName", "email"]));
-
   } catch (ex) {
     res.status(500).send(ex);
   }
@@ -44,4 +57,4 @@ async function getUser(req, res) {
   res.send(user);
 }
 
-module.exports = {getUser, createUser};
+module.exports = {getAllUsers, getUser, createUser};
