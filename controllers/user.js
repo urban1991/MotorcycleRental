@@ -19,6 +19,22 @@ async function getAllUsers(req, res) {
   res.send(users);
 }
 
+async function getUser(req, res) {
+  const user = await User.findById(req.params.id);
+
+  if (!user) {
+    return res.status(404).send("The user with given ID was not found");
+  }
+
+  res.send(user);
+}
+
+async function getLoggedUser(req, res) {
+  const user = await User.findById(req.user._id).select("-password -_id");
+
+  res.send(user);
+}
+
 async function createUser(req, res) {
   const {error} = validate(req.body);
 
@@ -51,10 +67,19 @@ async function createUser(req, res) {
   }
 }
 
-async function getUser(req, res) {
-  const user = await User.findById(req.user._id).select("-password -_id");
+async function updateUser(req, res) {
+
+}
+
+async function deleteUser(req, res) {
+  const user = await User.findByIdAndRemove(req.params.id);
+
+  if (!user) {
+    return res.status(404).send("The user with the given ID was not found");
+  }
 
   res.send(user);
 }
 
-module.exports = {getAllUsers, getUser, createUser};
+
+module.exports = {getAllUsers, getUser, getLoggedUser, createUser, updateUser, deleteUser};
