@@ -39,7 +39,7 @@ const userSchema = new Schema({
   },
   dateOfBirth: {
     type: Date,
-    required: false
+    required: false,
   },
   address: {
     type: String,
@@ -49,7 +49,7 @@ const userSchema = new Schema({
   },
   avatarUrl: {
     type: String,
-    required: false
+    required: false,
   },
   driverLicenseNumber: {
     type: String,
@@ -58,7 +58,7 @@ const userSchema = new Schema({
   },
   isVerified: {
     type: Boolean,
-    default: false
+    default: false,
   },
   createdAt: {
     type: Date,
@@ -87,7 +87,7 @@ function validateUser(user) {
     dateOfBirth: Joi.date(),
     address: Joi.string().min(5).max(255),
     driverLicenseNumber: Joi.string().required(),
-    avatarUrl: Joi.string().uri().allow(''),
+    avatarUrl: Joi.string().uri().allow(""),
     isVerified: Joi.boolean(),
   });
 
