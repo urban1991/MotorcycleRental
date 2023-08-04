@@ -77,21 +77,21 @@ const userSchema = new Schema({
 
 const User = mongoose.model("User", userSchema);
 
-function validateUser(user) {
+function validateUser(user, requestType) {
   const schema = Joi.object({
-    firstName: Joi.string().min(3).max(50).required(),
-    lastName: Joi.string().min(2).max(50).required(),
-    email: Joi.string().min(5).max(255).required().email(),
-    password: Joi.string().min(5).max(1024).required(),
+    firstName: Joi.string().min(3).max(50).alter({patch: schema => schema.optional()}),
+    lastName: Joi.string().min(2).max(50).alter({patch: schema => schema.optional()}),
+    email: Joi.string().min(5).max(255).email().alter({patch: schema => schema.optional()}),
+    password: Joi.string().min(5).max(1024).alter({patch: schema => schema.optional()}),
     phoneNumber: Joi.string().min(10).max(15),
     dateOfBirth: Joi.date(),
     address: Joi.string().min(5).max(255),
-    driverLicenseNumber: Joi.string().required(),
+    driverLicenseNumber: Joi.string().alter({patch: schema => schema.optional()}),
     avatarUrl: Joi.string().uri().allow(""),
     isVerified: Joi.boolean(),
   });
 
-  return schema.validate(user);
+  return schema.tailor(requestType).validate(user);
 }
 
 exports.User = User;
