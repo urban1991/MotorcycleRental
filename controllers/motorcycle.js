@@ -1,6 +1,7 @@
 const {Motorcycle, validate} = require("../models/motorcycle");
 const {Brand} = require("../models/brand");
 const APIFeatures = require("../utils/apiFeatures");
+const {updateObjFields} = require("../utils/updateObjFields");
 
 
 async function topMotorcycles(req, res) {
@@ -71,10 +72,7 @@ async function updateMotorcycle(req, res) {
     return res.status(400).send("Invalid brand");
   }
 
-  const updatedFields = Object.entries(req.body).reduce((acc, [key, value]) => ({
-    ...acc,
-    ...(value && {[key]: value})
-  }));
+  const updatedFields = updateObjFields(req.body);
 
   const motorcycle = await Motorcycle.findByIdAndUpdate(
     req.params.id,

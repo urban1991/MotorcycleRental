@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const Transaction = require("mongoose-transactions");
 const {validate, User} = require("../models/user");
 const APIFeatures = require("../utils/apiFeatures");
+const {Motorcycle} = require("../models/motorcycle");
+const {updateObjFields} = require("../utils/updateObjFields");
 
 const transaction = new Transaction();
 
@@ -36,7 +38,7 @@ async function getLoggedUser(req, res) {
 }
 
 async function createUser(req, res) {
-  const {error} = validate(req.body);
+  const {error} = validate(req.body, "post");
 
   if (error) {
     return res.status(400).send(error.details[0].message);
@@ -68,7 +70,25 @@ async function createUser(req, res) {
 }
 
 async function updateUser(req, res) {
+  const {error} = validate(req.body, "patch");
 
+  if (error) {
+    return res.status(400).send(error.details[0].message);
+  }
+
+  const updatedFields = updateObjFields(req.body);
+
+  const user = await User.findByIdAndUpdate(
+    req.params.id,
+    {$set: updatedFields},
+    {new: true}
+  );
+
+  if (!user) {
+    return res.status(404).send("The user with given ID was not found");
+  }
+
+  res.send(user);
 }
 
 async function deleteUser(req, res) {
