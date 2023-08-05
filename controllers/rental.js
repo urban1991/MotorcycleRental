@@ -1,8 +1,7 @@
 const {Rental, validate} = require("../models/rental");
 const {Customer} = require("../models/customer");
 const {Motorcycle} = require("../models/motorcycle");
-//this package is old and i should use mongoose transactions which are available in v7 version
-const Transaction = require("mongoose-transactions");
+
 const APIFeatures = require("../utils/apiFeatures");
 
 async function getAllRentals(req, res) {
@@ -47,21 +46,23 @@ async function createRental(req, res) {
 
   const rental = await Rental.create(req.body);
 
-  try {
-    const transaction = new Transaction();
-    const rentalId = transaction.insert("Rental", rental);
-    transaction.update("Motorcycle", motorcycle._id, {
-      $inc: {
-        numberInStock: -1,
-      },
-    });
+  //TODO: drop mongoose-transactions package and use mongoose transactions
 
-    await transaction.run();
-
-    res.send(rental);
-  } catch (ex) {
-    res.status(500).send("Something failed.");
-  }
+  // try {
+  //   const transaction = new Transaction();
+  //   const rentalId = transaction.insert("Rental", rental);
+  //   transaction.update("Motorcycle", motorcycle._id, {
+  //     $inc: {
+  //       numberInStock: -1,
+  //     },
+  //   });
+  //
+  //   await transaction.run();
+  //
+  //   res.send(rental);
+  // } catch (ex) {
+  //   res.status(500).send("Something failed.");
+  // }
 }
 
 module.exports = {

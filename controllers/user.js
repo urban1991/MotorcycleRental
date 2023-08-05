@@ -1,13 +1,9 @@
 const _ = require("lodash");
 const bcrypt = require("bcrypt");
-//Mongoose transactions needs to be replaced with something else
-const Transaction = require("mongoose-transactions");
 const {validate, User} = require("../models/user");
 const APIFeatures = require("../utils/apiFeatures");
 const {Motorcycle} = require("../models/motorcycle");
 const {updateObjFields} = require("../utils/updateObjFields");
-
-const transaction = new Transaction();
 
 async function getAllUsers(req, res) {
   const features = new APIFeatures(User.find(), req.query)
@@ -57,9 +53,12 @@ async function createUser(req, res) {
     const salt = await bcrypt.genSalt(10);
 
     user.password = await bcrypt.hash(user.password, salt);
-    transaction.insert("User", user);
 
-    await transaction.run();
+    //TODO drop transactions package and use mongoose transactions
+
+    // transaction.insert("User", user);
+    // await transaction.run();
+
     const token = user.generateAuthToken();
     res
       .header("x-auth-token", token)
