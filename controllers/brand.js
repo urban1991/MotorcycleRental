@@ -32,11 +32,10 @@ async function createBrand(req, res) {
   try {
     const brand = await Brand.create(req.body);
     res.send(brand);
-
-  } catch (error) {
+  } catch (err) {
     res.status(400).json({
       status: "fail",
-      message: error
+      message: err,
     });
   }
 }
@@ -48,15 +47,17 @@ async function updateBrand(req, res) {
     return res.status(400).send(error.details[0].message);
   }
 
-  const updatedFields = Object.entries(req.body).reduce((acc, [key, value]) => ({
-    ...acc,
-    ...(value && {[key]: value})
-  }));
+  const updatedFields = Object.entries(req.body).reduce(
+    (acc, [key, value]) => ({
+      ...acc,
+      ...(value && {[key]: value}),
+    }),
+  );
 
   const brand = await Brand.findByIdAndUpdate(
     req.params.id,
     {$set: {updatedFields}},
-    {new: true}
+    {new: true},
   );
 
   if (!brand) {
@@ -81,5 +82,5 @@ module.exports = {
   getBrand,
   createBrand,
   updateBrand,
-  deleteBrand
+  deleteBrand,
 };
