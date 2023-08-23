@@ -4,4 +4,5 @@ function updateObjFields(inputObject) {
     ...(value && {[key]: value})
   }), {});
 }
-export {updateObjFields};
+
+module.exports = {updateObjFields};
