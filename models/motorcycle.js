@@ -63,6 +63,23 @@ const motorcycleSchema = new Schema({
     type: Date,
     default: Date.now()
   }
+}, {toJSON: {virtuals: true}, toObject: {virtuals: true}});
+
+//Just demonstration of virtual property usage
+motorcycleSchema.virtual("V-Max").get(function () {
+  return this.motor && this.motor > 500 ? 240 : 180;
+});
+
+//DOCUMENT Middleware example previous to save
+motorcycleSchema.pre("save", function (next) {
+  console.log("Pre save middleware", this);
+  next();
+});
+
+//DOCUMENT Middleware example post to save
+motorcycleSchema.post("save", function (doc, next) {
+console.log("Post save middleware", doc);
+  next();
 });
 
 const Motorcycle = mongoose.model("Motorcycle", motorcycleSchema);
