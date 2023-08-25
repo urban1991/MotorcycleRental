@@ -2,7 +2,7 @@ node_modules/
 coverage/
 
 *.log
-
+logfile.log
 # local env files
 .env
 .env.local
