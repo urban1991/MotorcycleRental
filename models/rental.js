@@ -40,7 +40,7 @@ rentalSchema = new Schema({
       dailyRentalFee: {
         type: Number,
         required: true,
-        min: 0,
+        min: 10,
         max: 3000,
       },
     }),
@@ -90,6 +90,17 @@ rentalSchema = new Schema({
     required: true,
     default: Date.now,
   },
+  declaredReturnDate: {
+    type: Date,
+    required: true,
+    validate: {
+      // This refers to the current document and works only on create
+      validator: function(value) {
+        return value > this.dateOut;
+      },
+      message: (props) => `The declared return date (${props.value}) must be later than the date out (${this.dateOut}).`
+    }
+  },
   dateReturned: {
     type: Date,
   },
@@ -131,6 +142,7 @@ function validateRental(rental) {
       CVV: Joi.string().length(3).required(),
     }).required(),
     lateFee: Joi.number().min(0),
+    declaredReturnDate: Joi.date().required(),
     customerFeedback: Joi.string().max(500),
   });
 
