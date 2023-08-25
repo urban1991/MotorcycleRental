@@ -18,7 +18,10 @@ const motorcycleSchema = new Schema({
   bodyType: {
     type: String,
     required: true,
-    enum: ["sport", "enduro", "tourist", "chopper"]
+    enum: {
+      values: ["sport", "enduro", "tourist", "chopper"],
+      message: "Invalid body type. Available types: sport, enduro, tourist, chopper"
+    }
   },
   motor: {
     type: Number,
@@ -37,8 +40,8 @@ const motorcycleSchema = new Schema({
   dailyRentalFee: {
     type: Number,
     required: true,
-    min: 0,
-    max: 3000
+    min: [10, "A daily rental fee must be at least 10$"],
+    max: [3000, "A daily rental fee cannot be more than 3000$"]
   },
   numberInStock: {
     type: Number,

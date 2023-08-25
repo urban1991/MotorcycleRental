@@ -7,8 +7,8 @@ const customerSchema = new Schema({
   name: {
     type: String,
     required: true,
-    minlength: 3,
-    maxlength: 150,
+    minlength: [3, "A customer name must be at least 3 characters long"],
+    maxlength: [150, "A customer name cannot be longer than 150 characters"]
   },
   email: {
     type: String,
