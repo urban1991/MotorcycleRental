@@ -25,13 +25,13 @@ const motorcycleSchema = new Schema({
   },
   motor: {
     type: Number,
-    min: 49,
+    min: [49, "A motorcycle must have at least 50cc"],
     max: 3000
   },
   year: {
     type: Number,
-    minlength: 4,
-    maxlength: 4
+    minlength: [4, "A year must have 4 digits"],
+    maxlength: [4, "A year must have 4 digits"]
   },
   imageUrl: {
     type: String,
