@@ -60,7 +60,9 @@ const motorcycleSchema = new Schema({
   VIN: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    min: [10, "A VIN must have at least 10 digits"],
+    max: [10, "A VIN must have at least 10 digits"]
   },
   createdAt: {
     type: Date,
