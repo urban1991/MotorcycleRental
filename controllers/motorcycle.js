@@ -3,7 +3,6 @@ const {Brand} = require("../models/brand");
 const APIFeatures = require("../utils/apiFeatures");
 const {updateObjFields} = require("../utils/updateObjFields");
 
-
 async function topMotorcycles(req, res) {
   const motorcycles = await Motorcycle.find()
     .limit(5)
@@ -50,11 +49,10 @@ async function createMotorcycle(req, res) {
   try {
     const motorcycle = await Motorcycle.create(req.body);
     res.send(motorcycle);
-
   } catch (error) {
     res.status(400).json({
       status: "fail",
-      message: error
+      message: error,
     });
   }
 }
@@ -77,7 +75,7 @@ async function updateMotorcycle(req, res) {
   const motorcycle = await Motorcycle.findByIdAndUpdate(
     req.params.id,
     {$set: updatedFields},
-    {new: true}
+    {new: true},
   );
 
   if (!motorcycle) {
@@ -100,7 +98,7 @@ async function deleteMotorcycle(req, res) {
 async function getMotorcyclesStats(req, res) {
   const stats = await Motorcycle.aggregate([
     {
-      $match: {year: {$gte: 1990}}
+      $match: {year: {$gte: 1990}},
     },
     {
       $group: {
@@ -108,12 +106,12 @@ async function getMotorcyclesStats(req, res) {
         numMotorcycles: {$sum: 1},
         avgPrice: {$avg: "$dailyRentalFee"},
         minPrice: {$min: "$dailyRentalFee"},
-        maxPrice: {$max: "$dailyRentalFee"}
-      }
+        maxPrice: {$max: "$dailyRentalFee"},
+      },
     },
     {
-      $sort: {avgPrice: 1}
-    }
+      $sort: {avgPrice: 1},
+    },
   ]);
 
   if (!stats) {
@@ -130,5 +128,5 @@ module.exports = {
   createMotorcycle,
   updateMotorcycle,
   deleteMotorcycle,
-  getMotorcyclesStats
+  getMotorcyclesStats,
 };

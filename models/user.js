@@ -31,6 +31,12 @@ const userSchema = new Schema({
     required: true,
     select: false,
   },
+  confirmPassword: {
+    type: String,
+    minlength: 5,
+    maxlength: 1024,
+    required: true,
+  },
   phoneNumber: {
     type: String,
     required: false,
@@ -78,20 +84,35 @@ const userSchema = new Schema({
 const User = mongoose.model("User", userSchema);
 
 function validateUser(user, requestType) {
-  const schema = Joi.object({
-    firstName: Joi.string().min(3).max(50).alter({patch: schema => schema.optional()}),
-    lastName: Joi.string().min(2).max(50).alter({patch: schema => schema.optional()}),
-    email: Joi.string().min(5).max(255).email().alter({patch: schema => schema.optional()}),
-    password: Joi.string().min(5).max(1024).alter({patch: schema => schema.optional()}),
+  const userValidationSchema = Joi.object({
+    firstName: Joi.string()
+      .min(3)
+      .max(50)
+      .alter({patch: (schema) => schema.optional()}),
+    lastName: Joi.string()
+      .min(2)
+      .max(50)
+      .alter({patch: (schema) => schema.optional()}),
+    email: Joi.string()
+      .min(5)
+      .max(255)
+      .email()
+      .alter({patch: (schema) => schema.optional()}),
+    password: Joi.string()
+      .min(5)
+      .max(1024)
+      .alter({patch: (schema) => schema.optional()}),
     phoneNumber: Joi.string().min(10).max(15),
     dateOfBirth: Joi.date(),
     address: Joi.string().min(5).max(255),
-    driverLicenseNumber: Joi.string().alter({patch: schema => schema.optional()}),
+    driverLicenseNumber: Joi.string().alter({
+      patch: (schema) => schema.optional(),
+    }),
     avatarUrl: Joi.string().uri().allow(""),
     isVerified: Joi.boolean(),
   });
 
-  return schema.tailor(requestType).validate(user);
+  return userValidationSchema.tailor(requestType).validate(user);
 }
 
 exports.User = User;

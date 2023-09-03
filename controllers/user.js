@@ -2,7 +2,7 @@ const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const {validate, User} = require("../models/user");
 const APIFeatures = require("../utils/apiFeatures");
-const {Motorcycle} = require("../models/motorcycle");
+// const {Motorcycle} = require("../models/motorcycle");
 const {updateObjFields} = require("../utils/updateObjFields");
 
 async function getAllUsers(req, res) {
@@ -80,7 +80,7 @@ async function updateUser(req, res) {
   const user = await User.findByIdAndUpdate(
     req.params.id,
     {$set: updatedFields},
-    {new: true}
+    {new: true},
   );
 
   if (!user) {
@@ -100,5 +100,11 @@ async function deleteUser(req, res) {
   res.send(user);
 }
 
-
-module.exports = {getAllUsers, getUser, getLoggedUser, createUser, updateUser, deleteUser};
+module.exports = {
+  getAllUsers,
+  getUser,
+  getLoggedUser,
+  createUser,
+  updateUser,
+  deleteUser,
+};
