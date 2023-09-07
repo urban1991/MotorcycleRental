@@ -70,7 +70,7 @@ const motorcycleSchema = new Schema({
   }
 }, {toJSON: {virtuals: true}, toObject: {virtuals: true}});
 
-//Just demonstration of virtual property usage
+//Just a demonstration of virtual property usage
 motorcycleSchema.virtual("V-Max").get(function () {
   return this.motor && this.motor > 500 ? 240 : 180;
 });
