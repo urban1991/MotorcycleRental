@@ -7,8 +7,11 @@ const {
   createUser,
   getUser,
 } = require("../controllers/user");
+const {signUp} = require("../controllers/authentication");
 
 const router = express.Router();
+
+router.post("/signup", signUp);
 
 router.route("/me").get(getLoggedUser);
 
