@@ -5,9 +5,10 @@ const {
   updateUser,
   deleteUser,
   createUser,
-  getUser,
+  getUser
 } = require("../controllers/user");
 const {signUp, login} = require("../controllers/authentication");
+const {isLoggedIn} = require("../middleware/isLoggedIn")
 
 const router = express.Router();
 
@@ -16,8 +17,13 @@ router.post("/login", login);
 
 router.route("/me").get(getLoggedUser);
 
-router.route("/:id").get(getUser).patch(updateUser).delete(deleteUser);
+router.route("/:id")
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
 
-router.route("/").get(getAllUsers).post(createUser);
+router.route("/")
+  .get(isLoggedIn, getAllUsers)
+  .post(createUser);
 
 module.exports = router;
