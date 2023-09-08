@@ -84,13 +84,9 @@ userSchema.pre("save", async function(next) {
   next();
 });
 
-// userSchema.methods.generateAuthToken = function () {
-//   const token = jwt.sign(
-//     {_id: this._id, isAdmin: this.isAdmin},
-//     // config.get("jwtPrivateKey"),
-//   );
-//   return token;
-// };
+userSchema.methods.comparePasswords = async function(typedPassword, userPassword) {
+  return await bcrypt.compare(typedPassword, userPassword);
+};
 
 const User = mongoose.model("User", userSchema);
 
