@@ -27,12 +27,14 @@ async function getUser(req, res) {
   res.send(user);
 }
 
+// TODO: this fn should be rewrite when auth controller is ready
 async function getLoggedUser(req, res) {
   const user = await User.findById(req.user._id).select("-password -_id");
 
   res.send(user);
 }
 
+// TODO: this one also need to be check if it's still in use
 async function createUser(req, res) {
   const {error} = validate(req.body, "post");
 
