@@ -38,6 +38,7 @@ const userSchema = new Schema({
     maxlength: 1024,
     required: true,
   },
+  passwordChangeTimestamp: Date,
   driverLicenseNumber: {
     type: String,
     unique: true,
@@ -87,6 +88,15 @@ userSchema.pre("save", async function(next) {
 userSchema.methods.comparePasswords = async function(typedPassword, userPassword) {
   return await bcrypt.compare(typedPassword, userPassword);
 };
+
+userSchema.methods.changedPasswordAfter = function(tokenTimestamp) {
+  if (this.passwordChangeTimestamp) {
+    //TODO: this divison looks weird and unnecessary
+    const changedTimestamp = parseInt(this.passwordChangeTimestamp.getTime() / 1000, 10);
+    return tokenTimestamp < changedTimestamp;
+  }
+  return false;
+}
 
 const User = mongoose.model("User", userSchema);
 
