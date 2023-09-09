@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const {promisify} = require("util")
 const {tryCatchFn} = require("../utils/tryCatchFn");
 const AppError = require("../utils/AppError");
+const {User} = require("../models/user");
 
 const isLoggedIn = tryCatchFn(async (req, res, next) => {
   let token;
@@ -16,11 +17,22 @@ const isLoggedIn = tryCatchFn(async (req, res, next) => {
 
   const decodedToken = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   try {
+    const userFromToken = await User.findById(decodedToken.id);
+
+    if (!userFromToken) {
+      return next(new AppError("Owner of this token does not longer exist", 401));
+    }
+
+    if (userFromToken.changedPasswordAfter(decodedToken.iat)) {
+      return next(new AppError("Password has been changed, please log in again", 401));
+    }
 
   } catch (e) {
     // TODO: implement error controller
     return new AppError("Something went wrong", 400)
   }
+
+  req.user = decodedToken;
   next();
 });
 
