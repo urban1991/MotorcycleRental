@@ -7,7 +7,7 @@ const {
   updateMotorcycle,
   deleteMotorcycle,
   getMotorcyclesStats
-} = require("../controllers/motorcycle");
+} = require("../controllers/motorcycleController");
 
 const router = express.Router();
 

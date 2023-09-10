@@ -7,7 +7,7 @@ const {
   createUser,
   getUser
 } = require("../controllers/user");
-const {signUp, login} = require("../controllers/authentication");
+const {signUp, login} = require("../controllers/authController");
 const {isLoggedIn} = require("../middleware/isLoggedIn")
 
 const router = express.Router();
