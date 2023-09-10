@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-// const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const Joi = require("joi");
 const bcrypt = require("bcrypt");
 
@@ -78,7 +78,9 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now()
   },
-  isAdmin: Boolean
+  isAdmin: Boolean,
+  passwordResetToken: String,
+  passwordResetTokenExpirationDate: Date
 });
 
 userSchema.pre("save", async function(next) {
@@ -97,11 +99,20 @@ userSchema.methods.comparePasswords = async function(typedPassword, userPassword
 
 userSchema.methods.changedPasswordAfter = function(tokenTimestamp) {
   if (this.passwordChangeTimestamp) {
-    //TODO: this divison looks weird and unnecessary
-    const changedTimestamp = parseInt(this.passwordChangeTimestamp.getTime() / 1000, 10);
+    const changedTimestamp = Math.floor(this.passwordChangeTimestamp.getTime() / 1000);
     return tokenTimestamp < changedTimestamp;
   }
   return false;
+};
+
+userSchema.methods.generatePasswordResetToken = function() {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  this.passwordResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+  this.passwordResetTokenExpirationDate = new Date(new Date().getTime() + 10 * 60000);
+
+  console.log(`resetToken: `, {resetToken, DatabaseToken: this.passwordResetToken});
+  return resetToken;
 };
 
 const User = mongoose.model("User", userSchema);
