@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const {promisify} = require("util")
+const {promisify} = require("util");
 const {tryCatchFn} = require("../utils/tryCatchFn");
 const AppError = require("../utils/AppError");
 const {User} = require("../models/user");
@@ -12,7 +12,7 @@ const isLoggedIn = tryCatchFn(async (req, res, next) => {
   }
 
   if (!token) {
-    return next(new AppError("Unauthorized access, please log in to see resources", 401))
+    return next(new AppError("Unauthorized access, please log in to see resources", 401));
   }
 
   const decodedToken = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
@@ -27,12 +27,12 @@ const isLoggedIn = tryCatchFn(async (req, res, next) => {
       return next(new AppError("Password has been changed, please log in again", 401));
     }
 
+    req.user = userFromToken;
   } catch (e) {
     // TODO: implement error controller
-    return new AppError("Something went wrong", 400)
+    return new AppError("Something went wrong", 400);
   }
 
-  req.user = decodedToken;
   next();
 });
 
