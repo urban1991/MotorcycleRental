@@ -10,69 +10,75 @@ const userSchema = new Schema({
     type: String,
     minlength: 3,
     maxlength: 50,
-    required: true,
+    required: true
   },
   lastName: {
     type: String,
     minlength: 2,
     maxlength: 50,
-    required: true,
+    required: true
   },
   email: {
     type: String,
     minlength: 5,
     maxlength: 255,
     unique: true,
-    required: true,
+    required: true
   },
   password: {
     type: String,
     minlength: 5,
     maxlength: 1024,
     select: false,
-    required: true,
+    required: true
   },
   confirmPassword: {
     type: String,
     minlength: 5,
     maxlength: 1024,
-    required: true,
+    required: true
+  },
+  role: {
+    type: String,
+    enum: ["user", "vip-user", "admin"],
+    default: "user",
+    required: true
   },
   passwordChangeTimestamp: Date,
   driverLicenseNumber: {
     type: String,
     unique: true,
-    required: true,
+    required: true
   },
   phoneNumber: {
     type: String,
     minlength: 10,
     maxlength: 15,
-    required: false,
+    required: false
   },
   dateOfBirth: {
     type: Date,
-    required: false,
+    required: false
   },
   address: {
     type: String,
     minlength: 5,
     maxlength: 255,
-    required: false,
+    required: false
   },
   avatarUrl: {
     type: String,
-    required: false,
+    required: false
   },
   isVerified: {
     type: Boolean,
-    default: false,
+    default: false
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
+    default: Date.now()
   },
-  isAdmin: Boolean,
+  isAdmin: Boolean
 });
 
 userSchema.pre("save", async function(next) {
@@ -96,7 +102,7 @@ userSchema.methods.changedPasswordAfter = function(tokenTimestamp) {
     return tokenTimestamp < changedTimestamp;
   }
   return false;
-}
+};
 
 const User = mongoose.model("User", userSchema);
 
@@ -124,10 +130,10 @@ function validateUser(user, requestType) {
     dateOfBirth: Joi.date(),
     address: Joi.string().min(5).max(255),
     driverLicenseNumber: Joi.string().alter({
-      patch: (schema) => schema.optional(),
+      patch: (schema) => schema.optional()
     }),
     avatarUrl: Joi.string().uri().allow(""),
-    isVerified: Joi.boolean(),
+    isVerified: Joi.boolean()
   });
 
   return userValidationSchema.tailor(requestType).validate(user);

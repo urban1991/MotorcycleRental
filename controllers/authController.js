@@ -14,6 +14,7 @@ const signUp = tryCatchFn(async (req, res) => {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
+    role: req.body.role,
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
     driverLicenseNumber: req.body.driverLicenseNumber,
