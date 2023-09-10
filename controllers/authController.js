@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const {User} = require("../models/user");
 const {tryCatchFn} = require("../utils/tryCatchFn");
-const AppError = require('./../utils/appError');
+const AppError = require("./../utils/appError");
 
 function signToken(userId) {
   return jwt.sign({id: userId}, process.env.JWT_SECRET, {
@@ -39,7 +39,7 @@ const login = tryCatchFn(async (req, res, next) => {
   const {email, password} = req.body;
 
   if (!email || !password) {
-     return next(new AppError("Please provide email and password!", 400));
+    return next(new AppError("Please provide email and password!", 400));
   }
 
   const user = await User.findOne({email}).select("+password");
@@ -54,7 +54,18 @@ const login = tryCatchFn(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     token: userToken
-  })
+  });
 });
 
-module.exports = {signUp, login};
+const forgotPassword = tryCatchFn(async (req, res, next) => {
+  const user = await User.findOne({email: req.body.email});
+
+  if (!user) {
+    return next(new AppError("There is no user with given email address", 404));
+  }
+
+  const resetToken = user.generatePasswordResetToken();
+  await user.save({validateBeforeSave: false});
+});
+
+module.exports = {signUp, login, forgotPassword};
