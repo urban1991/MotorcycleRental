@@ -11,6 +11,18 @@ function signToken(userId) {
   });
 }
 
+function createSendToken(user, statusCode, res) {
+  const token = signToken(user._id);
+
+  res.status(statusCode).json({
+    status: "success",
+    token,
+    data: {
+      user
+    }
+  });
+}
+
 const signUp = tryCatchFn(async (req, res) => {
   const newUser = await User.create({
     firstName: req.body.firstName,
@@ -26,15 +38,7 @@ const signUp = tryCatchFn(async (req, res) => {
     avatarUrl: req.body.avatarUrl
   });
 
-  const userToken = signToken(newUser._id);
-
-  res.status(201).json({
-    status: "success",
-    token: userToken,
-    data: {
-      user: newUser
-    }
-  });
+  createSendToken(newUser, 201, res);
 });
 
 const login = tryCatchFn(async (req, res, next) => {
@@ -51,12 +55,7 @@ const login = tryCatchFn(async (req, res, next) => {
     return next(new AppError("Incorrect email address or password", 401));
   }
 
-  const userToken = signToken(user._id);
-
-  res.status(200).json({
-    status: "success",
-    token: userToken
-  });
+  createSendToken(user, 200, res);
 });
 
 const forgotPassword = tryCatchFn(async (req, res, next) => {
@@ -117,13 +116,25 @@ const resetPassword = tryCatchFn(async (req, res, next) => {
   user.passwordResetTokenExpirationDate = undefined;
   await user.save();
 
-  const userToken = signToken(user._id);
-
-  res.status(200).json({
-    status: "success",
-    message: "Password changed successfully!",
-    token: userToken
-  });
+  createSendToken(user, 200, res);
 });
 
-module.exports = {signUp, login, forgotPassword, resetPassword};
+const updatePassword = tryCatchFn(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select("+password");
+
+  if (!user) {
+    return next(new AppError("There is no user with given email address", 404));
+  }
+
+  const isPasswordCorrect = await user.comparePasswords(req.body.passwordCurrent, user.password);
+
+  if (isPasswordCorrect) {
+    user.password = req.body.passwordNew;
+    user.confirmPassword = req.body.passwordNewConfirm;
+    await user.save();
+  }
+
+  createSendToken(user, 200, res);
+});
+
+module.exports = {signUp, login, forgotPassword, resetPassword, updatePassword};
