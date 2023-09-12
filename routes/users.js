@@ -11,7 +11,8 @@ const {
   signUp,
   login,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  updatePassword
 } = require("../controllers/authController");
 const {isLoggedIn} = require("../middleware/isLoggedIn");
 const {isAuthorized} = require("../middleware/isAuthorized");
@@ -23,6 +24,8 @@ router.post("/login", login);
 
 router.post("/forgotPassword", forgotPassword);
 router.patch("/resetPassword/:token", resetPassword);
+
+router.patch("/updatePassword", isLoggedIn, updatePassword);
 
 
 router.route("/me").get(getLoggedUser);
