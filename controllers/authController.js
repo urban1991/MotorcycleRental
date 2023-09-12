@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 const {User} = require("../models/user");
 const {tryCatchFn} = require("../utils/tryCatchFn");
 const AppError = require("./../utils/appError");
@@ -70,7 +71,7 @@ const forgotPassword = tryCatchFn(async (req, res, next) => {
 
   const resetUrl = `${req.protocol}://${req.get("host")}/api/users/resetPassword/${resetToken}`;
 
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetUrl}.
+  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetUrl}
    \nIf you didn't forget your password, please ignore this email!`;
 
   try {
@@ -85,14 +86,44 @@ const forgotPassword = tryCatchFn(async (req, res, next) => {
       status: "success",
       message: "Token sent to email!"
     });
+
   } catch (err) {
-    console.log(`err: `, err);
     user.passwordResetToken = undefined;
     user.passwordResetTokenExpirationDate = undefined;
-    await user.save({validateBeforeSave: false});
 
+    await user.save({validateBeforeSave: false});
     return next(new AppError("There was an error sending the email. Try again later!", 500));
   }
 });
 
-module.exports = {signUp, login, forgotPassword};
+const resetPassword = tryCatchFn(async (req, res, next) => {
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetTokenExpirationDate: {$gt: Date.now()}
+  });
+
+  if (!user) {
+    return next(new AppError("Token is invalid or has expired", 400));
+  }
+
+  user.password = req.body.password;
+  user.confirmPassword = req.body.confirmPassword;
+  user.passwordResetToken = undefined;
+  user.passwordResetTokenExpirationDate = undefined;
+  await user.save();
+
+  const userToken = signToken(user._id);
+
+  res.status(200).json({
+    status: "success",
+    message: "Password changed successfully!",
+    token: userToken
+  });
+});
+
+module.exports = {signUp, login, forgotPassword, resetPassword};
