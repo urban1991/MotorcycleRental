@@ -10,80 +10,80 @@ const userSchema = new Schema({
     type: String,
     minlength: 3,
     maxlength: 50,
-    required: true
+    required: true,
   },
   lastName: {
     type: String,
     minlength: 2,
     maxlength: 50,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     minlength: 5,
     maxlength: 255,
     unique: true,
-    required: true
+    required: true,
   },
   password: {
     type: String,
     minlength: 5,
     maxlength: 1024,
     select: false,
-    required: true
+    required: true,
   },
   confirmPassword: {
     type: String,
     minlength: 5,
     maxlength: 1024,
-    required: true
+    required: true,
   },
+  passwordChangeTimestamp: Date,
   role: {
     type: String,
     enum: ["user", "vip-user", "admin"],
     default: "user",
-    required: true
+    required: true,
   },
-  passwordChangeTimestamp: Date,
   driverLicenseNumber: {
     type: String,
     unique: true,
-    required: true
+    required: true,
   },
   phoneNumber: {
     type: String,
     minlength: 10,
     maxlength: 15,
-    required: false
+    required: false,
   },
   dateOfBirth: {
     type: Date,
-    required: false
+    required: false,
   },
   address: {
     type: String,
     minlength: 5,
     maxlength: 255,
-    required: false
+    required: false,
   },
   avatarUrl: {
     type: String,
-    required: false
+    required: false,
   },
   isVerified: {
     type: Boolean,
-    default: false
+    default: false,
   },
   createdAt: {
     type: Date,
-    default: Date.now()
+    default: Date.now(),
   },
   isAdmin: Boolean,
   passwordResetToken: String,
-  passwordResetTokenExpirationDate: Date
+  passwordResetTokenExpirationDate: Date,
 });
 
-userSchema.pre("save", async function(next) {
+userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     return next();
   }
@@ -93,7 +93,7 @@ userSchema.pre("save", async function(next) {
   next();
 });
 
-userSchema.pre("save", function(next) {
+userSchema.pre("save", function (next) {
   if (!this.isModified("password") || this.isNew) {
     return next();
   }
@@ -101,23 +101,33 @@ userSchema.pre("save", function(next) {
   next();
 });
 
-userSchema.methods.comparePasswords = async function(typedPassword, userPassword) {
+userSchema.methods.comparePasswords = async function (
+  typedPassword,
+  userPassword
+) {
   return await bcrypt.compare(typedPassword, userPassword);
 };
 
-userSchema.methods.changedPasswordAfter = function(tokenTimestamp) {
+userSchema.methods.changedPasswordAfter = function (tokenTimestamp) {
   if (this.passwordChangeTimestamp) {
-    const changedTimestamp = Math.floor(this.passwordChangeTimestamp.getTime() / 1000);
+    const changedTimestamp = Math.floor(
+      this.passwordChangeTimestamp.getTime() / 1000
+    );
     return tokenTimestamp < changedTimestamp;
   }
   return false;
 };
 
-userSchema.methods.generatePasswordResetToken = function() {
+userSchema.methods.generatePasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
 
-  this.passwordResetToken = crypto.createHash("sha256").update(resetToken).digest("hex");
-  this.passwordResetTokenExpirationDate = new Date(new Date().getTime() + 10 * 60000);
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+  this.passwordResetTokenExpirationDate = new Date(
+    new Date().getTime() + 10 * 60000
+  );
 
   return resetToken;
 };
@@ -148,10 +158,10 @@ function validateUser(user, requestType) {
     dateOfBirth: Joi.date(),
     address: Joi.string().min(5).max(255),
     driverLicenseNumber: Joi.string().alter({
-      patch: (schema) => schema.optional()
+      patch: (schema) => schema.optional(),
     }),
     avatarUrl: Joi.string().uri().allow(""),
-    isVerified: Joi.boolean()
+    isVerified: Joi.boolean(),
   });
 
   return userValidationSchema.tailor(requestType).validate(user);
