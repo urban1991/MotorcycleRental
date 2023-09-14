@@ -6,20 +6,20 @@ const logger = winston.createLogger({
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.prettyPrint()
-      )
+        winston.format.prettyPrint(),
+      ),
     }),
-    new winston.transports.File({filename: "logfile.log"})
+    new winston.transports.File({filename: "logfile.log"}),
   ],
   exceptionHandlers: [
     new winston.transports.File({
       filename: "exceptions.log",
-      handleExceptions: true
-    })
-  ]
+      handleExceptions: true,
+    }),
+  ],
 });
 
-module.exports = function(err, req, res) {
+module.exports = function (err, req, res) {
   logger.error(err.message, {meta: err});
   res.status(500).send("Something failed terribly.");
 };

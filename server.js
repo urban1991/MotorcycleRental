@@ -1,9 +1,9 @@
 require("./middleware/logger");
 const express = require("express");
+const dotenv = require("dotenv");
 const {logger} = require("./middleware/error");
 
-const dotenv = require("dotenv");
-dotenv.config({path: "./.env"})
+dotenv.config({path: "./.env"});
 
 const app = express();
 

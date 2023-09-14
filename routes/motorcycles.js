@@ -6,7 +6,7 @@ const {
   getMotorcycle,
   updateMotorcycle,
   deleteMotorcycle,
-  getMotorcyclesStats
+  getMotorcyclesStats,
 } = require("../controllers/motorcycleController");
 
 const router = express.Router();
@@ -15,11 +15,10 @@ router.route("/top").get(topMotorcycles);
 
 router.route("/stats").get(getMotorcyclesStats);
 
-router.route("/")
-  .get(getAllMotorcycles)
-  .post(createMotorcycle);
+router.route("/").get(getAllMotorcycles).post(createMotorcycle);
 
-router.route("/:id")
+router
+  .route("/:id")
   .get(getMotorcycle)
   .patch(updateMotorcycle)
   .delete(deleteMotorcycle);

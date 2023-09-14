@@ -7,16 +7,15 @@ const {
   getAllBrands,
   getBrand,
   deleteBrand,
-  updateBrand
+  updateBrand,
 } = require("../controllers/brand");
 
 const router = express.Router();
 
-router.route("/")
-  .get(getAllBrands)
-  .post(createBrand);
+router.route("/").get(getAllBrands).post(createBrand);
 
-router.route("/:id")
+router
+  .route("/:id")
   .get(validateObjectId, getBrand)
   //TODO: add auth and admin middleware when you learn how to use them
 

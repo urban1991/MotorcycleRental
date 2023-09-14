@@ -7,19 +7,19 @@ const paymentSchema = new Schema({
   customerId: {
     type: Schema.Types.ObjectId,
     ref: "Customer",
-    required: true
+    required: true,
   },
   rentalId: {
     type: Schema.Types.ObjectId,
     ref: "Rental",
-    required: true
+    required: true,
   },
   paymentMethod: {
     type: new mongoose.Schema({
       cardType: {
         type: String,
         required: true,
-        enum: ['Visa', 'MasterCard', 'AmericanExpress']
+        enum: ["Visa", "MasterCard", "AmericanExpress"],
       },
       cardNumber: {
         type: String,
@@ -29,7 +29,7 @@ const paymentSchema = new Schema({
       },
       expiryDate: {
         type: Date,
-        required: true
+        required: true,
       },
       CVV: {
         type: String,
@@ -38,28 +38,30 @@ const paymentSchema = new Schema({
         maxlength: 4,
       },
     }),
-    required: true
+    required: true,
   },
   amount: {
     type: Number,
     required: true,
-    min: 0
+    min: 0,
   },
   paymentDate: {
     type: Date,
-    default: Date.now()
-  }
+    default: Date.now(),
+  },
 });
 
 const Payment = mongoose.model("Payment", paymentSchema);
 
 function validatePayment(payment) {
   const schema = Joi.object({
-    customerId:  Joi.string().required(),
+    customerId: Joi.string().required(),
     rentalId: Joi.string().required(),
     amount: Joi.number().min(0).required(),
     paymentMethod: Joi.object({
-      cardType: Joi.string().valid('Visa', 'MasterCard', 'AmericanExpress').required(),
+      cardType: Joi.string()
+        .valid("Visa", "MasterCard", "AmericanExpress")
+        .required(),
       cardNumber: Joi.string().length(16).required(),
       expiryDate: Joi.date().required(),
       CVV: Joi.string().length(3).required(),

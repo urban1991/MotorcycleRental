@@ -8,7 +8,7 @@ const customerSchema = new Schema({
     type: String,
     required: true,
     minlength: [3, "A customer name must be at least 3 characters long"],
-    maxlength: [150, "A customer name cannot be longer than 150 characters"]
+    maxlength: [150, "A customer name cannot be longer than 150 characters"],
   },
   email: {
     type: String,
@@ -39,7 +39,7 @@ const customerSchema = new Schema({
   isVip: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 const Customer = mongoose.model("Customer", customerSchema);

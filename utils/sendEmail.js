@@ -7,15 +7,15 @@ const sendEmail = async (options) => {
     // secure: true,
     auth: {
       user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD
-    }
+      pass: process.env.EMAIL_PASSWORD,
+    },
   });
 
   const mailOptions = {
     from: "Peter Ur <motoRental@moto.io>",
     to: options.email,
     subject: options.subject,
-    text: options.message
+    text: options.message,
   };
 
   await transporter.sendMail(mailOptions);

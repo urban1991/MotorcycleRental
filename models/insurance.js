@@ -1,22 +1,23 @@
 const mongoose = require("mongoose");
+
 const {Schema} = mongoose;
 const Joi = require("joi");
 
 const insuranceSchema = new Schema({
   insuranceProvider: {
     type: String,
-    required: true
+    required: true,
   },
   insurancePolicyNumber: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   insuranceStartDate: {
     type: Date,
-    required: true
+    required: true,
   },
-  insuranceEndDate: Date
+  insuranceEndDate: Date,
 });
 
 const Insurance = mongoose.model("Insurance", insuranceSchema);
@@ -26,7 +27,7 @@ function validateInsurance(insurance) {
     insuranceProvider: Joi.string().required(),
     insurancePolicyNumber: Joi.string().required(),
     insuranceStartDate: Joi.date().required(),
-    insuranceEndDate: Joi.date()
+    insuranceEndDate: Joi.date(),
   });
 
   return schema.validate(insurance);

@@ -49,14 +49,14 @@ rentalSchema = new Schema({
   status: {
     type: String,
     required: true,
-    enum: ['reserved', 'rented', 'returned', 'late']
+    enum: ["reserved", "rented", "returned", "late"],
   },
   paymentMethod: {
     type: new mongoose.Schema({
       cardType: {
         type: String,
         required: true,
-        enum: ['Visa', 'MasterCard', 'AmericanExpress']
+        enum: ["Visa", "MasterCard", "AmericanExpress"],
       },
       cardNumber: {
         type: String,
@@ -66,7 +66,7 @@ rentalSchema = new Schema({
       },
       expiryDate: {
         type: Date,
-        required: true
+        required: true,
       },
       CVV: {
         type: String,
@@ -75,15 +75,15 @@ rentalSchema = new Schema({
         maxlength: 4,
       },
     }),
-    required: true
+    required: true,
   },
   lateFee: {
     type: Number,
-    min: 0
+    min: 0,
   },
   customerFeedback: {
     type: String,
-    maxlength: 500
+    maxlength: 500,
   },
   dateOut: {
     type: Date,
@@ -95,11 +95,12 @@ rentalSchema = new Schema({
     required: true,
     validate: {
       // This refers to the current document and works only on create
-      validator: function(value) {
+      validator: function (value) {
         return value > this.dateOut;
       },
-      message: (props) => `The declared return date (${props.value}) must be later than the date out (${this.dateOut}).`
-    }
+      message: (props) =>
+        `The declared return date (${props.value}) must be later than the date out (${this.dateOut}).`,
+    },
   },
   dateReturned: {
     type: Date,
@@ -111,7 +112,7 @@ rentalSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
-  }
+  },
 });
 
 rentalSchema.statics.lookup = function (customerId, motorcycleId) {
@@ -134,9 +135,13 @@ function validateRental(rental) {
   const schema = Joi.object({
     customerId: Joi.string().alphanum().length(24).required(),
     motorcycleId: Joi.string().alphanum().length(24).required(),
-    status: Joi.string().valid('reserved', 'rented', 'returned', 'late').required(),
+    status: Joi.string()
+      .valid("reserved", "rented", "returned", "late")
+      .required(),
     paymentMethod: Joi.object({
-      cardType: Joi.string().valid('Visa', 'MasterCard', 'AmericanExpress').required(),
+      cardType: Joi.string()
+        .valid("Visa", "MasterCard", "AmericanExpress")
+        .required(),
       cardNumber: Joi.string().length(16).required(),
       expiryDate: Joi.date().required(),
       CVV: Joi.string().length(3).required(),
