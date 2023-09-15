@@ -1,10 +1,10 @@
 const express = require("express");
 const {
   getAllUsers,
-  getLoggedUser,
   updateLoggedUser,
   updateUser,
   deleteUser,
+  deleteMyAccount,
   getUser,
 } = require("../controllers/user");
 const {
@@ -26,10 +26,9 @@ router.post("/forgotPassword", forgotPassword);
 router.patch("/resetPassword/:token", resetPassword);
 
 router.patch("/updateMe", isLoggedIn, updateLoggedUser);
+router.delete("/deleteMe", isLoggedIn, deleteMyAccount);
 
 router.patch("/updatePassword", isLoggedIn, updatePassword);
-
-router.route("/me").get(getLoggedUser);
 
 router
   .route("/:id")
