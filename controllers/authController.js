@@ -13,6 +13,17 @@ function signToken(userId) {
 
 function createSendToken(user, statusCode, res) {
   const token = signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+  };
+
+  res.cookie("jwt", token, cookieOptions);
+
+  user.password = undefined;
 
   res.status(statusCode).json({
     status: "success",
@@ -71,7 +82,7 @@ const forgotPassword = tryCatchFn(async (req, res, next) => {
   await user.save({validateBeforeSave: false});
 
   const resetUrl = `${req.protocol}://${req.get(
-    "host",
+    "host"
   )}/api/users/resetPassword/${resetToken}`;
 
   const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetUrl}
@@ -96,8 +107,8 @@ const forgotPassword = tryCatchFn(async (req, res, next) => {
     return next(
       new AppError(
         "There was an error sending the email. Try again later!",
-        500,
-      ),
+        500
+      )
     );
   }
 });
@@ -135,7 +146,7 @@ const updatePassword = tryCatchFn(async (req, res, next) => {
 
   const isPasswordCorrect = await user.comparePasswords(
     req.body.passwordCurrent,
-    user.password,
+    user.password
   );
 
   if (isPasswordCorrect) {
