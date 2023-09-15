@@ -1,7 +1,5 @@
-const bcrypt = require("bcrypt");
 const {validate, User} = require("../models/user");
 const APIFeatures = require("../utils/apiFeatures");
-// const {Motorcycle} = require("../models/motorcycle");
 const {updateObjFields} = require("../utils/updateObjFields");
 const {tryCatchFn} = require("../utils/tryCatchFn");
 const AppError = require("../utils/AppError");
@@ -15,7 +13,7 @@ function excludeReqFields(reqBody, ...excludedFields) {
   }, {});
 }
 
-async function getAllUsers(req, res) {
+const getAllUsers = tryCatchFn(async (req, res) => {
   const features = new APIFeatures(User.find(), req.query)
     .filter()
     .sort()
@@ -25,9 +23,9 @@ async function getAllUsers(req, res) {
   const users = await features.query;
 
   res.send(users);
-}
+});
 
-async function getUser(req, res) {
+const getUser = tryCatchFn(async (req, res) => {
   const user = await User.findById(req.params.id);
 
   if (!user) {
@@ -35,7 +33,7 @@ async function getUser(req, res) {
   }
 
   res.send(user);
-}
+});
 
 const updateLoggedUser = tryCatchFn(async (req, res, next) => {
   if (req.body.password || req.body.confirmPassword) {
@@ -56,7 +54,6 @@ const updateLoggedUser = tryCatchFn(async (req, res, next) => {
 
   const filterObj = excludeReqFields(req.body, ...excludeFields);
 
-  console.log(`filterObj: `, filterObj);
   const updatedFields = updateObjFields(filterObj);
 
   const user = await User.findByIdAndUpdate(
@@ -73,12 +70,14 @@ const updateLoggedUser = tryCatchFn(async (req, res, next) => {
   });
 });
 
-// TODO: this fn should be rewrite when auth controller is ready
-async function getLoggedUser(req, res) {
-  const user = await User.findById(req.user._id).select("-password -_id");
+const deleteMyAccount = tryCatchFn(async (req, res) => {
+  await User.findByIdAndUpdate(req.user._id, {active: false});
 
-  res.send(user);
-}
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
 
 // TODO: this one also need to be check if it's still in use, uninstall loadash
 //  so this code is for sure to change
@@ -114,7 +113,7 @@ async function getLoggedUser(req, res) {
 //   }
 // }
 
-async function updateUser(req, res) {
+const updateUser = tryCatchFn(async (req, res) => {
   const {error} = validate(req.body, "patch");
 
   if (error) {
@@ -134,9 +133,9 @@ async function updateUser(req, res) {
   }
 
   res.send(user);
-}
+});
 
-async function deleteUser(req, res) {
+const deleteUser = tryCatchFn(async (req, res) => {
   const user = await User.findByIdAndRemove(req.params.id);
 
   if (!user) {
@@ -144,13 +143,13 @@ async function deleteUser(req, res) {
   }
 
   res.send(user);
-}
+});
 
 module.exports = {
   getAllUsers,
   getUser,
-  getLoggedUser,
   updateLoggedUser,
   updateUser,
   deleteUser,
+  deleteMyAccount,
 };
