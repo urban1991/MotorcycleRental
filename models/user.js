@@ -77,10 +77,22 @@ const userSchema = new Schema({
   createdAt: {
     type: Date,
     default: Date.now(),
+    select: false,
+  },
+  active: {
+    type: Boolean,
+    default: true,
+    select: false,
   },
   isAdmin: Boolean,
   passwordResetToken: String,
   passwordResetTokenExpirationDate: Date,
+});
+
+userSchema.pre(/^find/, function (next) {
+  this.find({active: {$ne: false}});
+
+  next();
 });
 
 userSchema.pre("save", async function (next) {
