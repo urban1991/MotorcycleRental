@@ -4,6 +4,13 @@ class ApiFeatures {
     this.queryString = queryString;
   }
 
+  static formatQuery(query) {
+    if (Array.isArray(query)) {
+      query = query.join(" ");
+    }
+    return query.replaceAll(",", " ");
+  }
+
   filter() {
     const queryObj = {...this.queryString};
     const excludedFields = ["page", "sort", "limit", "fields"];
@@ -19,12 +26,11 @@ class ApiFeatures {
 
   sort() {
     if (this.queryString.sort) {
-      const sortBy = this.queryString.sort.split(",").join(" ");
-      this.query = this.query.sort(sortBy);
-    } else {
-      this.query = this.query.sort("-createdAt");
+      this.query.sort(this.constructor.formatQuery(this.queryString.sort));
+      return this;
     }
 
+    this.query.sort("-createdAt");
     return this;
   }
 
