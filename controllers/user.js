@@ -80,38 +80,7 @@ const deleteMyAccount = tryCatchFn(async (req, res) => {
 });
 
 // TODO: this one also need to be check if it's still in use, uninstall loadash
-//  so this code is for sure to change
-// async function createUser(req, res) {
-//   const {error} = validate(req.body, "post");
-//
-//   if (error) {
-//     return res.status(400).send(error.details[0].message);
-//   }
-//
-//   let user = await User.findOne({email: req.body.email});
-//   if (user) {
-//     return res.status(400).send("User with given email address  already exist");
-//   }
-//
-//   user = {};
-//
-//   try {
-//     const salt = await bcrypt.genSalt(10);
-//
-//     user.password = await bcrypt.hash(user.password, salt);
-//
-//     //TODO drop transactions package and use mongoose transactions
-//
-//     // transaction.insert("User", user);
-//     // await transaction.run();
-//
-//     const token = user.generateAuthToken();
-//     res
-//       .header("x-auth-token", token)
-//   } catch (ex) {
-//     res.status(500).send(ex);
-//   }
-// }
+//  so this code is for sure to change. Create user i.e. by adimn should be added here
 
 const updateUser = tryCatchFn(async (req, res) => {
   const {error} = validate(req.body, "patch");
