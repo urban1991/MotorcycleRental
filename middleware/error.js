@@ -9,6 +9,7 @@ const logger = winston.createLogger({
         winston.format.prettyPrint(),
       ),
     }),
+
     new winston.transports.File({filename: "logfile.log"}),
   ],
   exceptionHandlers: [
