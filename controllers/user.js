@@ -79,8 +79,8 @@ const deleteMyAccount = tryCatchFn(async (req, res) => {
   });
 });
 
-// TODO: this one also need to be check if it's still in use, uninstall loadash
-//  so this code is for sure to change. Create user i.e. by adimn should be added here
+// TODO: this one also needs to be check if it's still in use, uninstall lodash
+//  so this code is for sure to change. Create user i.e. by admin should be added here
 
 const updateUser = tryCatchFn(async (req, res) => {
   const {error} = validate(req.body, "patch");
