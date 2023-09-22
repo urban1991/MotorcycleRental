@@ -5,10 +5,7 @@ const isAuthorized =
   (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(
-        new AppError(
-          "You don't have permissions to access this resources",
-          403,
-        ),
+        new AppError("You don't have permissions to access this resources", 403)
       );
     }
     next();

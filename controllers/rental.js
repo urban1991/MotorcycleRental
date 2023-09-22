@@ -1,5 +1,5 @@
 const {Rental, validate} = require("../models/rental");
-const {Customer} = require("../models/customer");
+const {Customer} = require("../models/guest");
 const {Motorcycle} = require("../models/motorcycle");
 
 const APIFeatures = require("../utils/apiFeatures");
