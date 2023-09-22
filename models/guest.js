@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const {Schema} = mongoose;
 const Joi = require("joi");
 
-const customerSchema = new Schema({
+const guestSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -36,15 +36,11 @@ const customerSchema = new Schema({
     required: true,
     unique: true,
   },
-  isVip: {
-    type: Boolean,
-    default: false,
-  },
 });
 
-const Customer = mongoose.model("Customer", customerSchema);
+const Guest = mongoose.model("Customer", guestSchema);
 
-function validateCustomer(customer) {
+function validateCustomer(guest) {
   const schema = Joi.object({
     name: Joi.string().min(3).max(150).required(),
     email: Joi.string().min(5).max(255).required().email(),
@@ -52,11 +48,10 @@ function validateCustomer(customer) {
     address: Joi.string().min(5).max(255),
     dateOfBirth: Joi.date(),
     driverLicenseNumber: Joi.string().required(),
-    isVip: Joi.boolean(),
   });
 
-  return schema.validate(customer);
+  return schema.validate(guest);
 }
 
-exports.Customer = Customer;
+exports.Customer = Guest;
 exports.validate = validateCustomer;
