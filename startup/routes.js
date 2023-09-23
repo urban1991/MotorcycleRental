@@ -3,12 +3,10 @@ const express = require("express");
 const rateLimit = require("express-rate-limit");
 const mongoSanitize = require("express-mongo-sanitize");
 const motorcycles = require("../routes/motorcycles");
-const customers = require("../routes/customers");
+const customers = require("../routes/guests");
 const brands = require("../routes/brand");
 const rentals = require("../routes/rentals");
 const users = require("../routes/users");
-const auth = require("../routes/auth");
-const returns = require("../routes/returns");
 const error = require("../middleware/error");
 
 const limiter = rateLimit({
@@ -27,7 +25,5 @@ module.exports = function (app) {
   app.use("/api/brands", brands);
   app.use("/api/rentals", rentals);
   app.use("/api/users", users);
-  app.use("/api/auth", auth);
-  app.use("/api/returns", returns);
   app.use(error);
 };

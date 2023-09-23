@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const express = require("express");
-const {Customer, validate} = require("../models/customer");
+const {Customer, validate} = require("../models/guest");
 
+//TODO: this whole file requires refactoring
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -42,7 +43,7 @@ router.put("/:id", async (req, res) => {
         isVip: req.body.isVip,
       },
     },
-    {returnOriginal: false},
+    {returnOriginal: false}
   );
   if (!customer)
     return res.status(404).send("The motorcycle with given ID was not found");
